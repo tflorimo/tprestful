@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listado de Usuarios</title>
+    <title>Listado de estudiantes</title>
 </head>
 
 <script>
@@ -12,18 +12,21 @@
     function buscarUsuario() {
         var dni = prompt("Ingrese el DNI del estudiante a buscar");
         if (dni != null) {
-            window.location.href = "/usuarios/" + dni;
+            window.location.href = "/estudiantes/" + dni;
         }
     }
 </script>
 
 <body>
 
-    <h2>Listado de Usuarios</h2>
+    <h2>Listado de estudiantes</h2>
     <h4>
         <a href="javascript:buscarUsuario()">Haga clic para buscar a un estudiante</a>
     </h4>
-    <p>Lista demo</p>
+    <h4>
+        <a href="/">Haga clic volver al inicio</a>
+    </h4>
+    
     <ol>
         <li>Tomas</li>
         <li>Juan Pablo</li>
@@ -31,7 +34,7 @@
         <li>Omar</li>
         <li>Fulano</li>
         <li>
-            <a href="/crear_usuarios">Agregar nuevo usuario</a>
+            <a href="/crear_estudiantes">Agregar nuevo estudiante</a>
         </li>
     </ol>
     
