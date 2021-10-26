@@ -55,9 +55,30 @@ app.get('/crear_estudiantes_send', (req, res) => {
             apellido: req.query.apellidos,
             edad: req.query.edad
         }
-        fs.writeFileSync('./estudiantes_bbdd.json', JSON.stringify(estudianteNuevo, 'utf8', 2), {
-            flag: 'a' // con este flag no piso el archivo
+        // si el DNI no existe, ingreso el estudiante
+        /**
+         * para validar esto lo que tengo que hacer es leer el archivo y leer todos los objetos json y fijarme la key dni, luego comparar todos con el valor que inserto
+         */
+
+        const estudiantesCargados = JSON.parse(fs.readFileSync('./estudiantes_bbdd.json', 'utf8'))
+        console.log(estudiantesCargados)
+        
+        estudiantesCargados.forEach(estudiante => {
+            if(estudiante.dni === estudianteNuevo.dni) {
+                console.log('El estudiante ya existe')
+                res.end()
+            }
         })
-        res.end('Estudiante creado')
+
+        // estudiantesCargados.forEach(element => {
+            // ver cada key y su value, la key que busco es dni
+        // });
+
+        // if no existe, cargo el estudiante
+        // fs.writeFileSync('./estudiantes_bbdd.json', JSON.stringify(estudianteNuevo, null, 2), {
+        //     flag: 'a' // con este flag no piso el archivo
+        // })
+        // el response deberia terminar en un mensaje que me permita volver al listado de usuarios, pero debería hacerse con html?
+        // res.end('Estudiante creado')
     }
 })
