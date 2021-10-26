@@ -1,0 +1,22 @@
+{
+  "name": "tprestful",
+  "version": "1.0.0",
+  "description": "trabajo practico para taller de programacion 2",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tflorimo/tprestful.git"
+  },
+  "author": "Tomás Florimo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tflorimo/tprestful/issues"
+  },
+  "homepage": "https://github.com/tflorimo/tprestful#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
