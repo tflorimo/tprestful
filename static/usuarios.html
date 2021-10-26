@@ -6,9 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Listado de Usuarios</title>
 </head>
+
+<script>
+    // crea un prompt para que se ingrese un DNI y redirecciona para buscarlo
+    function buscarUsuario() {
+        var dni = prompt("Ingrese el DNI del estudiante a buscar");
+        if (dni != null) {
+            window.location.href = "/usuarios/" + dni;
+        }
+    }
+</script>
+
 <body>
 
     <h2>Listado de Usuarios</h2>
+    <h4>
+        <a href="javascript:buscarUsuario()">Haga clic para buscar a un estudiante</a>
+    </h4>
     <p>Lista demo</p>
     <ol>
         <li>Tomas</li>
@@ -17,7 +31,7 @@
         <li>Omar</li>
         <li>Fulano</li>
         <li>
-            <a href="/usuarios/crear">Agregar nuevo usuario</a>
+            <a href="/crear_usuarios">Agregar nuevo usuario</a>
         </li>
     </ol>
     
