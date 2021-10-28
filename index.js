@@ -42,12 +42,10 @@ app.get('/crear_estudiantes', (req, res) => {
 
 // Redirecciona a creacion de usuario
 app.get('/crear_estudiantes_send', (req, res) => {
+    
     if(Object.keys(req.query).length === 0) {
-        console.log('No se recibieron parametros a la hora de crear un estudiante')
-        res.get('/crear_estudiantes?nodata=1')
+        res.end("No se enviaron datos para cargar el estudiante")
     } else {
-
-        console.log('Recibo datos del formulario')
 
         const estudianteNuevo = {
             dni: req.query.dni,
@@ -55,30 +53,32 @@ app.get('/crear_estudiantes_send', (req, res) => {
             apellido: req.query.apellidos,
             edad: req.query.edad
         }
-        // si el DNI no existe, ingreso el estudiante
-        /**
-         * para validar esto lo que tengo que hacer es leer el archivo y leer todos los objetos json y fijarme la key dni, luego comparar todos con el valor que inserto
-         */
 
-        const estudiantesCargados = JSON.parse(fs.readFileSync('./estudiantes_bbdd.json', 'utf8'))
-        console.log(estudiantesCargados)
-        
-        estudiantesCargados.forEach(estudiante => {
-            if(estudiante.dni === estudianteNuevo.dni) {
-                console.log('El estudiante ya existe')
-                res.end()
-            }
-        })
+        // Busco si existe ese DNI en la base de datos, si existe no cargo el estudiante y cierro el request
 
-        // estudiantesCargados.forEach(element => {
-            // ver cada key y su value, la key que busco es dni
-        // });
+        if(buscarEstudiante(estudianteNuevo.dni) ) {
+            res.end("Ese DNI ya existe en la base de datos")
+        } else {
+            // Levanto la base de datos, si viene vacía, a estudiantesJson la inicializo como un array vacío
+            let estudiantesJson = fs.readFileSync('./estudiantes_bbdd.json', 'utf8') || []
+            // creo la variable "estudiantes", si el json está vacío le asigno estudiantesJson sin parsear, lo que sería un array vacío
+            let estudiantes = estudiantesJson.length > 0 ? JSON.parse(estudiantesJson) : estudiantesJson
+            estudiantes.push(estudianteNuevo)
+            estudiantesJson = JSON.stringify(estudiantes, null, 4)
+            fs.writeFileSync('./estudiantes_bbdd.json',estudiantesJson,'utf-8')
+            res.end("Estudiante cargado")
+        }
 
-        // if no existe, cargo el estudiante
-        // fs.writeFileSync('./estudiantes_bbdd.json', JSON.stringify(estudianteNuevo, null, 2), {
-        //     flag: 'a' // con este flag no piso el archivo
-        // })
-        // el response deberia terminar en un mensaje que me permita volver al listado de usuarios, pero debería hacerse con html?
-        // res.end('Estudiante creado')
     }
 })
+
+const buscarEstudiante = (dni) => {
+    let estudiantesCargados = fs.readFileSync('./estudiantes_bbdd.json', 'utf8')
+    // Retorno null si estudiantesCargados no tiene datos
+    if(estudiantesCargados.length == 0) return null;
+    // En caso de que estudiantes cargados tenga valores dentro, la función continúa
+    estudiantesCargados = JSON.parse(estudiantesCargados)
+    return estudiantesCargados.find(estudiante => estudiante.dni === dni)
+
+}
+
