@@ -5,6 +5,7 @@ const app = express() // creo una instancia de express
 const port = 4000 // le asigno el puerto 4000
 const root = __dirname
 const fs = require('fs') // importo para la lectura de archivos
+const {buscarEstudiante, obtenerEstudiantes} = require('./estudiante')
 app.use(express.static('static')) // le digo a express que use la carpeta static
 
 // inicializo el servidor con el puerto y escribo en consola que el servidor esta corriendo
@@ -25,7 +26,20 @@ app.get('/', (req, res) => {
 // Lista a los estudiantes
 app.get('/estudiantes/', (req, res) => {
     console.log('GET request en /estudiantes')
-    res.sendFile(root + '/static/estudiantes.html')
+
+    // obtengo los estudiantes del archivo json
+
+    let estudiantes = obtenerEstudiantes()
+    let listado = "<h2>Listado de estudiantes</h2>"
+    listado += "<ul>"
+    for (let i = 0; i < estudiantes.length; i++) {
+        listado += "<li>" + estudiantes[i].nombre + " " + estudiantes[i].apellido + " -  DNI: " + estudiantes[i].dni + "</li>"
+    }
+
+    listado += "</ul>"
+    res.send(listado)
+    res.end("Listando")
+    
 })
 
 // Busca a un usuario con un DNI
@@ -71,14 +85,3 @@ app.get('/crear_estudiantes_send', (req, res) => {
 
     }
 })
-
-const buscarEstudiante = (dni) => {
-    let estudiantesCargados = fs.readFileSync('./estudiantes_bbdd.json', 'utf8')
-    // Retorno null si estudiantesCargados no tiene datos
-    if(estudiantesCargados.length == 0) return null;
-    // En caso de que estudiantes cargados tenga valores dentro, la función continúa
-    estudiantesCargados = JSON.parse(estudiantesCargados)
-    return estudiantesCargados.find(estudiante => estudiante.dni === dni)
-
-}
-
