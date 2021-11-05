@@ -18,7 +18,6 @@ const obtenerEstudiantes = () => {
 
     let estudiantesCargados = fs.readFileSync('./estudiantes_bbdd.json', 'utf8')
     if(estudiantesCargados.length == 0) return null;
-
     return estudiantesCargados = JSON.parse(estudiantesCargados)
 }
 
