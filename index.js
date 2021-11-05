@@ -37,15 +37,20 @@ app.get('/estudiantes/', (req, res) => {
     }
 
     listado += "</ul>"
-    res.send(listado)
-    res.end("Listando")
-    
+    res.send(listado)    
 })
 
-// Busca a un usuario con un DNI
+// Busca a un usuario con un DNI y lo escribe en pantalla
 app.get('/estudiantes/:dni', (req, res) => {
-    console.log('GET request en /estudiantes/:dni, redireccion a editUser')
-    res.send('Leyendo estudiante ' + req.params.dni)
+
+    let estudiante = buscarEstudiante(req.params.dni)
+
+    let estudianteMostrado = "<h3>" + estudiante.nombre + " " + estudiante.apellido + "</h3>"
+    estudianteMostrado += "<p>DNI: " + estudiante.dni + "</p>"
+    estudianteMostrado += "<p>Edad: " + estudiante.edad + "</p>"
+
+    // res.send('Leyendo estudiante ' + req.params.dni)
+    res.send(estudianteMostrado)
 })
 
 // Redirecciona a creacion de usuario
@@ -54,7 +59,7 @@ app.get('/crear_estudiantes', (req, res) => {
     res.sendFile(root + '/static/crear_estudiantes.html')
 })
 
-// Redirecciona a creacion de usuario
+// Procesa la creación del usuario
 app.get('/crear_estudiantes_send', (req, res) => {
     
     if(Object.keys(req.query).length === 0) {
