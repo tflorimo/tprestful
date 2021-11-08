@@ -13,9 +13,9 @@ Busca estudiantes por rango de edad.
 
 Busca estudiante por su DNI. -- listo --
 
-Modifica estudiante por su ID. 
+Modifica estudiante por su ID. -- listo --
 
-Borra estudiante por su ID.
+Borra estudiante por su ID. -- listo --
 
 **Git Ignore**
 Excluye la carpeta node_modules.

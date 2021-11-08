@@ -5,7 +5,7 @@ const app = express() // creo una instancia de express
 const port = 4000 // le asigno el puerto 4000
 const root = __dirname
 const fs = require('fs') // importo para la lectura de archivos
-const {buscarEstudiante, obtenerEstudiantes, obtenerSiguienteId} = require('./estudiante')
+const {buscarEstudiantePorDNI, buscarEstudiantePorId, obtenerEstudiantes, obtenerSiguienteId} = require('./estudiante')
 app.use(express.static('static')) // le digo a express que use la carpeta static
 
 // inicializo el servidor con el puerto y escribo en consola que el servidor esta corriendo
@@ -44,7 +44,7 @@ app.get('/estudiantes/', (req, res) => {
 app.get('/estudiantes/:dni', (req, res) => {
     console.log('GET request en /estudiantes/:dni, se debe buscar un estudiante')
     
-    if(estudiante = buscarEstudiante(req.params.dni)){
+    if(estudiante = buscarEstudiantePorDNI(req.params.dni)){
         let estudianteMostrado = "<h3>" + estudiante.nombre + " " + estudiante.apellido + "</h3>"
         estudianteMostrado += "<p>DNI: " + estudiante.dni + "</p>"
         estudianteMostrado += "<p>Edad: " + estudiante.edad + "</p>"
@@ -77,7 +77,7 @@ app.get('/crear_estudiantes_send', (req, res) => {
         }
         // Busco si existe ese DNI en la base de datos, si existe no cargo el estudiante y cierro el request
 
-        if(buscarEstudiante(estudianteNuevo.dni) ) {
+        if(buscarEstudiantePorDNI(estudianteNuevo.dni) ) {
             res.end("Ese DNI ya existe en la base de datos")
         } else {
             // Levanto la base de datos, si viene vacía, a estudiantesJson la inicializo como un array vacío
@@ -93,4 +93,64 @@ app.get('/crear_estudiantes_send', (req, res) => {
     }
 })
 
-// app.get()
+// Modifica el estudiante segun su ID recibiendo los parámetros por get
+app.get('/modificar_estudiante/:id', (req, res) => {
+    console.log('GET request en /modificar_estudiante/:id, backend de modificacion de estudiante')
+
+    if(req.params.id === null) {
+        res.end("No se recibió el ID del estudiante a modificar")
+    } else { 
+        // si encuentra al estudiante, modifica solo los valores que recibe por get
+        if(estudiante = buscarEstudiantePorId(req.params.id)) {
+            // formato: valor = valor que llega || valor original, evalúa el valor que llega para ver si existe, en caso de que exista se lo asigna.
+            // el ID no lo modifico
+            estudiante.dni = req.query.dni || estudiante.dni
+            estudiante.nombre = req.query.nombre || estudiante.nombre
+            estudiante.apellido = req.query.apellido || estudiante.apellido
+            estudiante.edad = req.query.edad || estudiante.edad
+        }
+
+        // actualiza el archivo json con el estudiante modificado
+        // para ello debe leer el archivo, buscar el estudiante por ID y modificarlo
+        let estudiantes = obtenerEstudiantes()
+
+        for(let i = 0; i < estudiantes.length; i++) {
+            // si encuentro el estudiante con la id que estoy modificando, lo pisa con el "nuevo que acabo de crear"
+            if(estudiantes[i].id == req.params.id) {
+                estudiantes[i] = estudiante
+            }
+        }
+
+        // actualizo el archivo json con el estudiante modificado
+        estudiantesJson = JSON.stringify(estudiantes, null, 4)
+        fs.writeFileSync('./estudiantes_bbdd.json',estudiantesJson,'utf-8')
+
+        res.send("Estudiante modificado")
+
+    }
+
+})
+
+// Si encuentra el estudiante lo saca del json, luego vuelve a guardar el json, sin el estudiante
+app.get('/borrar_estudiante/:id', (req, res) => {
+    console.log('GET request en /borrar_estudiante/:id, backend de borrado de estudiante')
+
+    if(req.params.id === null) {
+        res.end("No se recibió el ID del estudiante a borrar")
+    } else { 
+        // si encuentra al estudiante, lo saca del json
+        if(estudiante = buscarEstudiantePorId(req.params.id)) {
+            let estudiantes = obtenerEstudiantes()
+            for(let i = 0; i < estudiantes.length; i++) {
+                // si encuentro el estudiante con la id que estoy modificando, lo saca del array en la posición i (en la que está)
+                if(estudiantes[i].id == estudiante.id) {
+                    estudiantes.splice(i, 1)
+                }
+            }
+            // actualizo el archivo json con la lista de estudiantes sin el estudiante borrado
+            estudiantesJson = JSON.stringify(estudiantes, null, 4)
+            fs.writeFileSync('./estudiantes_bbdd.json',estudiantesJson,'utf-8')
+            res.send("Estudiante eliminado")
+        }
+    }
+})
