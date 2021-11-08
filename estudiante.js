@@ -11,18 +11,24 @@ const buscarEstudiante = (dni) => {
     return estudiantesCargados.find(estudiante => estudiante.dni === dni)
 }
 
-
 // Lista los estudiantes del JSON
-
 const obtenerEstudiantes = () => {
-
     let estudiantesCargados = fs.readFileSync('./estudiantes_bbdd.json', 'utf8')
     if(estudiantesCargados.length == 0) return null;
     return estudiantesCargados = JSON.parse(estudiantesCargados)
 }
 
+// Me fijo la cantidad de estudiantes que hay en la base de datos, para obtener el ID. El id va a ser la cantidad + 1.
+// Si no hay estudiantes cargados, el id va a ser 1.
+const obtenerSiguienteId = () => {
+    let estudiantesCargados = fs.readFileSync('./estudiantes_bbdd.json', 'utf8')
+    if(estudiantesCargados.length == 0) return 1;
+    estudiantesCargados = JSON.parse(estudiantesCargados)
+    return estudiantesCargados.length + 1
+}
 
 module.exports = {
     buscarEstudiante,
+    obtenerSiguienteId,
     obtenerEstudiantes
 }

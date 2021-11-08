@@ -5,7 +5,7 @@ const app = express() // creo una instancia de express
 const port = 4000 // le asigno el puerto 4000
 const root = __dirname
 const fs = require('fs') // importo para la lectura de archivos
-const {buscarEstudiante, obtenerEstudiantes} = require('./estudiante')
+const {buscarEstudiante, obtenerEstudiantes, obtenerSiguienteId} = require('./estudiante')
 app.use(express.static('static')) // le digo a express que use la carpeta static
 
 // inicializo el servidor con el puerto y escribo en consola que el servidor esta corriendo
@@ -25,7 +25,7 @@ app.get('/', (req, res) => {
 
 // Lista a los estudiantes
 app.get('/estudiantes/', (req, res) => {
-    console.log('GET request en /estudiantes')
+    console.log('GET request en /estudiantes, se deben listar los estudiantes')
 
     // obtengo los estudiantes del archivo json
 
@@ -33,24 +33,26 @@ app.get('/estudiantes/', (req, res) => {
     let listado = "<h2>Listado de estudiantes</h2>"
     listado += "<ul>"
     for (let i = 0; i < estudiantes.length; i++) {
-        listado += "<li>" + estudiantes[i].nombre + " " + estudiantes[i].apellido + " -  DNI: " + estudiantes[i].dni + "</li>"
+        listado += "<li>" + estudiantes[i].id + ") " + estudiantes[i].nombre + " " + estudiantes[i].apellido + " -  DNI: " + estudiantes[i].dni + "</li>"
     }
 
     listado += "</ul>"
     res.send(listado)    
 })
 
-// Busca a un usuario con un DNI y lo escribe en pantalla
+// Busca a un usuario con un DNI y lo escribe en pantalla, si no lo encuentra cierra el request indicando que no se han encontrado resultados
 app.get('/estudiantes/:dni', (req, res) => {
+    console.log('GET request en /estudiantes/:dni, se debe buscar un estudiante')
+    
+    if(estudiante = buscarEstudiante(req.params.dni)){
+        let estudianteMostrado = "<h3>" + estudiante.nombre + " " + estudiante.apellido + "</h3>"
+        estudianteMostrado += "<p>DNI: " + estudiante.dni + "</p>"
+        estudianteMostrado += "<p>Edad: " + estudiante.edad + "</p>"
+        res.send(estudianteMostrado)
+    } else {
+        res.end("No se encontró un estudiante con DNI " + req.params.dni)
+    }
 
-    let estudiante = buscarEstudiante(req.params.dni)
-
-    let estudianteMostrado = "<h3>" + estudiante.nombre + " " + estudiante.apellido + "</h3>"
-    estudianteMostrado += "<p>DNI: " + estudiante.dni + "</p>"
-    estudianteMostrado += "<p>Edad: " + estudiante.edad + "</p>"
-
-    // res.send('Leyendo estudiante ' + req.params.dni)
-    res.send(estudianteMostrado)
 })
 
 // Redirecciona a creacion de usuario
@@ -61,18 +63,18 @@ app.get('/crear_estudiantes', (req, res) => {
 
 // Procesa la creación del usuario
 app.get('/crear_estudiantes_send', (req, res) => {
-    
+    console.log("GET request en crear_estudiantes_send, backend de creación de estudiante")
     if(Object.keys(req.query).length === 0) {
         res.end("No se enviaron datos para cargar el estudiante")
     } else {
 
         const estudianteNuevo = {
+            id: obtenerSiguienteId(),
             dni: req.query.dni,
             nombre: req.query.nombres,
             apellido: req.query.apellidos,
             edad: req.query.edad
         }
-
         // Busco si existe ese DNI en la base de datos, si existe no cargo el estudiante y cierro el request
 
         if(buscarEstudiante(estudianteNuevo.dni) ) {
@@ -90,3 +92,5 @@ app.get('/crear_estudiantes_send', (req, res) => {
 
     }
 })
+
+// app.get()
