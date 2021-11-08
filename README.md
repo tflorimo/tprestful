@@ -9,7 +9,7 @@ La persona que doy de alta debe tener un nombre, un apellido, un DNI y una edad.
 
 Busca a todos los estudiantes registrados en la base de datos. --listo--
 
-Busca estudiantes por rango de edad. 
+Busca estudiantes por rango de edad. -- listo --
 
 Busca estudiante por su DNI. -- listo --
 

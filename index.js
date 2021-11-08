@@ -33,7 +33,7 @@ app.get('/estudiantes/', (req, res) => {
     let listado = "<h2>Listado de estudiantes</h2>"
     listado += "<ul>"
     for (let i = 0; i < estudiantes.length; i++) {
-        listado += "<li>" + estudiantes[i].id + ") " + estudiantes[i].nombre + " " + estudiantes[i].apellido + " -  DNI: " + estudiantes[i].dni + "</li>"
+        listado += "<li>" + estudiantes[i].id + ") " + estudiantes[i].nombre + " " + estudiantes[i].apellido + " -  DNI: " + estudiantes[i].dni + " - Edad: " + estudiantes[i].edad + "</li>"
     }
 
     listado += "</ul>"
@@ -153,4 +153,31 @@ app.get('/borrar_estudiante/:id', (req, res) => {
             res.send("Estudiante eliminado")
         }
     }
+})
+
+// Solo lista a los estudiantes cuya edad se encuentre entre edadInicial y edadFinal
+app.get('/estudiantes/:edadInicial/:edadFinal', (req, res) => {
+
+    if(req.params.edadInicial === null || req.params.edadFinal === null) {
+        res.end("No se recibió la edad inicial o final")
+    } else {
+
+        let estudiantes = obtenerEstudiantes()
+
+        let estudiantesFiltrados = estudiantes.filter(estudiante => {
+            return estudiante.edad >= req.params.edadInicial && estudiante.edad <= req.params.edadFinal
+        })
+
+        let listado = "<h2>Estudiantes entre " + req.params.edadInicial + " y " + req.params.edadFinal + " años </h2>"
+        listado += "<ul>"
+        for (let i = 0; i < estudiantesFiltrados.length; i++) {
+            listado += "<li>" + estudiantesFiltrados[i].id + ") " + estudiantesFiltrados[i].nombre + " " + estudiantesFiltrados[i].apellido + " -  DNI: " + estudiantesFiltrados[i].dni + " - Edad:" + estudiantesFiltrados[i].edad + "</li>"
+        }
+
+        listado += "</ul>"
+        res.send(listado)  
+
+    }
+
+
 })
