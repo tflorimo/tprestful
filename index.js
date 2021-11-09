@@ -135,7 +135,7 @@ app.get('/modificar_estudiante/:id', (req, res) => {
 app.get('/borrar_estudiante/:id', (req, res) => {
     console.log('GET request en /borrar_estudiante/:id, backend de borrado de estudiante')
 
-    if(req.params.id === null) {
+    if(req.params.id == null) {
         res.end("No se recibió el ID del estudiante a borrar")
     } else { 
         // si encuentra al estudiante, lo saca del json

@@ -1,8 +1,5 @@
 **Trabajo Practico**
-
-Una APIREST que permita la gestion de una base de datos de personas.
-
-Utiliza NODE + EXPRESS.
+Una APIREST que permite la gestion de una base de datos de estudiantes.
 
 Permite dar de alta una persona, siempre y cuando no exista ya en la base de datos.
 La persona que doy de alta debe tener un nombre, un apellido, un DNI y una edad. --listo--
@@ -17,6 +14,13 @@ Modifica estudiante por su ID. -- listo --
 
 Borra estudiante por su ID. -- listo --
 
+Confeccionar lista de errores - pendiente! -
+
 **Git Ignore**
 Excluye la carpeta node_modules.
+
+**Setup**
 Para que el proyecto funcione, utilizar npm install nodemon y npm install --save express.
+
+**Uso**
+Para inicializar el servidor basta con utilizar npm start.

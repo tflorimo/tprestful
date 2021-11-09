@@ -1,13 +1,6 @@
 [
     {
-        "id": "1",
-        "dni": "12345678",
-        "nombre": "Fulano",
-        "apellido": "De Tal",
-        "edad": "30"
-    },
-    {
-        "id": "2",
+        "id": 2,
         "dni": "39800566",
         "nombre": "Tomas",
         "apellido": "Florimo",
@@ -19,5 +12,12 @@
         "apellido": "Polti",
         "edad": "44",
         "id": 3
+    },
+    {
+        "id": 4,
+        "dni": "1234",
+        "apellido": "Virgolini",
+        "edad": "46",
+        "nombre": "Mengano"
     }
 ]
