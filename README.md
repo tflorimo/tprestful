@@ -14,6 +14,8 @@ Modifica estudiante por su ID. -- listo --
 
 Borra estudiante por su ID. -- listo --
 
+Agregados estados de respuesta -- listo --
+
 Confeccionar lista de errores - pendiente! -
 
 **Git Ignore**
@@ -21,6 +23,7 @@ Excluye la carpeta node_modules.
 
 **Setup**
 Para que el proyecto funcione, utilizar npm install nodemon y npm install --save express.
+Se espera que estudiantes_bbdd.json sea inicializado con "[]" sin comillas
 
 **Uso**
 Para inicializar el servidor basta con utilizar npm start.

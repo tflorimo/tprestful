@@ -23,7 +23,7 @@ app.get('/', (req, res) => {
     res.sendFile(root + '/static/index.html')
 })
 
-// Lista a los estudiantes
+// Lista a los estudiantes, si no hay estudiantes devuelve un response 204
 app.get('/estudiantes/', (req, res) => {
     console.log('GET request en /estudiantes, se deben listar los estudiantes')
 
@@ -35,12 +35,18 @@ app.get('/estudiantes/', (req, res) => {
     for (let i = 0; i < estudiantes.length; i++) {
         listado += "<li>" + estudiantes[i].id + ") " + estudiantes[i].nombre + " " + estudiantes[i].apellido + " -  DNI: " + estudiantes[i].dni + " - Edad: " + estudiantes[i].edad + "</li>"
     }
-
     listado += "</ul>"
-    res.send(listado)    
+
+    if(estudiantes.length > 0) {
+        res.status(200).send(listado)    
+    } else {
+        //Podría enviar 404 de "no se encontraron estudiantes" pero en realidad, la ruta existe, por ende no hace falta enviar un 404, con 204 de "no hay contenido" es suficiente
+        res.status(204).send("No hay estudiantes")
+    }
+
 })
 
-// Busca a un usuario con un DNI y lo escribe en pantalla, si no lo encuentra cierra el request indicando que no se han encontrado resultados
+// Busca a un usuario con un DNI y lo escribe en pantalla, si no lo encuentra, responde un error 404 indicando que no se encontró lo buscado
 app.get('/estudiantes/:dni', (req, res) => {
     console.log('GET request en /estudiantes/:dni, se debe buscar un estudiante')
     
@@ -48,9 +54,9 @@ app.get('/estudiantes/:dni', (req, res) => {
         let estudianteMostrado = "<h3>" + estudiante.nombre + " " + estudiante.apellido + "</h3>"
         estudianteMostrado += "<p>DNI: " + estudiante.dni + "</p>"
         estudianteMostrado += "<p>Edad: " + estudiante.edad + "</p>"
-        res.send(estudianteMostrado)
+        res.status(200).send(estudianteMostrado)
     } else {
-        res.end("No se encontró un estudiante con DNI " + req.params.dni)
+        res.status(404).send("No se encontró un estudiante con DNI " + req.params.dni)
     }
 
 })
@@ -65,7 +71,7 @@ app.get('/crear_estudiantes', (req, res) => {
 app.get('/crear_estudiantes_send', (req, res) => {
     console.log("GET request en crear_estudiantes_send, backend de creación de estudiante")
     if(Object.keys(req.query).length === 0) {
-        res.end("No se enviaron datos para cargar el estudiante")
+        res.status(204).send("No se enviaron datos para cargar el estudiante") // envia el status 204 de no hay contenido
     } else {
 
         const estudianteNuevo = {
@@ -87,7 +93,7 @@ app.get('/crear_estudiantes_send', (req, res) => {
             estudiantes.push(estudianteNuevo)
             estudiantesJson = JSON.stringify(estudiantes, null, 4)
             fs.writeFileSync('./estudiantes_bbdd.json',estudiantesJson,'utf-8')
-            res.end("Estudiante cargado")
+            res.status(200).send("Estudiante cargado")
         }
 
     }
@@ -98,7 +104,7 @@ app.get('/modificar_estudiante/:id', (req, res) => {
     console.log('GET request en /modificar_estudiante/:id, backend de modificacion de estudiante')
 
     if(req.params.id === null) {
-        res.end("No se recibió el ID del estudiante a modificar")
+        res.status(204).send("No se recibió el ID del estudiante a modificar") // envia el status 204 de no hay contenido
     } else { 
         // si encuentra al estudiante, modifica solo los valores que recibe por get
         if(estudiante = buscarEstudiantePorId(req.params.id)) {
@@ -125,7 +131,7 @@ app.get('/modificar_estudiante/:id', (req, res) => {
         estudiantesJson = JSON.stringify(estudiantes, null, 4)
         fs.writeFileSync('./estudiantes_bbdd.json',estudiantesJson,'utf-8')
 
-        res.send("Estudiante modificado")
+        res.status(200).send("Estudiante modificado")
 
     }
 
@@ -136,7 +142,7 @@ app.get('/borrar_estudiante/:id', (req, res) => {
     console.log('GET request en /borrar_estudiante/:id, backend de borrado de estudiante')
 
     if(req.params.id == null) {
-        res.end("No se recibió el ID del estudiante a borrar")
+        res.status(204).send("No se recibió el ID del estudiante a borrar") // envia el status 204 de no hay contenido
     } else { 
         // si encuentra al estudiante, lo saca del json
         if(estudiante = buscarEstudiantePorId(req.params.id)) {
@@ -150,7 +156,7 @@ app.get('/borrar_estudiante/:id', (req, res) => {
             // actualizo el archivo json con la lista de estudiantes sin el estudiante borrado
             estudiantesJson = JSON.stringify(estudiantes, null, 4)
             fs.writeFileSync('./estudiantes_bbdd.json',estudiantesJson,'utf-8')
-            res.send("Estudiante eliminado")
+            res.status(200).send("Estudiante eliminado") // envia el status 200 de OK
         }
     }
 })
@@ -159,7 +165,7 @@ app.get('/borrar_estudiante/:id', (req, res) => {
 app.get('/estudiantes/:edadInicial/:edadFinal', (req, res) => {
 
     if(req.params.edadInicial === null || req.params.edadFinal === null) {
-        res.end("No se recibió la edad inicial o final")
+        res.status(204).send("No se recibió la edad inicial o final")
     } else {
 
         let estudiantes = obtenerEstudiantes()
@@ -175,7 +181,7 @@ app.get('/estudiantes/:edadInicial/:edadFinal', (req, res) => {
         }
 
         listado += "</ul>"
-        res.send(listado)  
+        res.status(200).send(listado)  
 
     }
 
