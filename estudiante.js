@@ -3,7 +3,7 @@ const fs = require('fs') // importo para la lectura de archivos
 
 // Recibe un DNI como parámetro y busca al estudiante en el JSON de la base de datos, retorna NULL si no lo encuentra y retorna el estudiante si lo encuentra
 const buscarEstudiantePorDNI = (dni) => {
-    let estudiantesCargados = fs.readFileSync('./estudiantes_bbdd.json', 'utf8')
+    let estudiantesCargados = fs.readFileSync('./estudiantes_bbdd.json', 'utf8') || []
     // Retorno null si estudiantesCargados no tiene datos
     if(estudiantesCargados.length == 0) return null;
     // En caso de que estudiantes cargados tenga valores dentro, la función continúa
@@ -13,7 +13,7 @@ const buscarEstudiantePorDNI = (dni) => {
 
 // Recibe un numero como parámetro y busca al estudiante en el JSON de la base de datos, retorna NULL si no lo encuentra y retorna el estudiante si lo encuentra
 const buscarEstudiantePorId = (id) => {
-    let estudiantesCargados = fs.readFileSync('./estudiantes_bbdd.json', 'utf8')
+    let estudiantesCargados = fs.readFileSync('./estudiantes_bbdd.json', 'utf8') || []
     // Retorno null si estudiantesCargados no tiene datos
     if(estudiantesCargados.length == 0) return null;
     // En caso de que estudiantes cargados tenga valores dentro, la función continúa
