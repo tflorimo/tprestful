@@ -7,7 +7,7 @@
         "edad": "25"
     },
     {
-        "dni": "26068911",
+        "dni": "1234567",
         "nombre": "Dario",
         "apellido": "Polti",
         "edad": "44",
@@ -16,7 +16,7 @@
     {
         "id": 4,
         "dni": "1234",
-        "apellido": "Virgolini",
+        "apellido": "de Fulano",
         "edad": "46",
         "nombre": "Mengano"
     }

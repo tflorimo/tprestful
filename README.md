@@ -16,7 +16,7 @@ Borra estudiante por su ID. -- listo --
 
 Agregados estados de respuesta -- listo --
 
-Confeccionar lista de errores - pendiente! -
+Confeccionar lista de errores - listo! -
 
 **Git Ignore**
 Excluye la carpeta node_modules.
